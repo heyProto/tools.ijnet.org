@@ -696,7 +696,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     var cards = document.querySelectorAll('.card-holder');
     for(var card of cards){
       if(!(card.dataset.fellow === selected)){
-        card.style.display = "none";
+        card.style.display = "none";    
       }
     }
   });
@@ -712,22 +712,33 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   //snippet for displaying the cards on filtering
   let url = window.location.href;
   let tag = url.split("tag=");
-  let conference_name = tag[1];
-  if(url.indexOf(conference_name) >= 0) {
+  let confarr = tag[1].split(',');
+  let conference_name = confarr[0];
+  console.log(conference_name);
+  if(url.indexOf(conference_name) >= 0 && confarr.length > 0) {
       document.getElementById("back_button").style.display = 'block';
-      $( ".conference_paragraph_text[data-tag='"+conference_name+"']" )[0].style.display='block';
+      // $( ".conference_paragraph_text[data-tag='"+conference_name+"']" )[0].style.display='block';
       // document.getElementById("conference_paragraph_text").style.display = 'block';
       document.getElementById('home_paragraph_text').style.display = 'none';
       document.getElementById('conference-dropdown').style.display = 'none';
       let imp_class = conference_name+"-card";
-      let displayThese = $( ".card-holder[data-tag='"+conference_name+"']" );
+      let str="";
+      let str2=".card-holder";
+      for(i in confarr){
+          str+=".card-holder[data-tag='"+confarr[i]+"'], ";
+          str2+="[data-tag!='"+confarr[i]+"']";
+      }
+      str=str.slice(0,str.length-2);
+      console.log(str,str2);
+      let displayThese = $(str);
       for(let displayElement = 0; displayElement < displayThese.length; displayElement++) {
           displayThese[displayElement].style.display = 'block';
       }
-      let dontDisplayThese = $(".card-holder[data-tag!='"+conference_name+"']");
+      let dontDisplayThese = $(str2);
       for(let dontDisplayElement = 0; dontDisplayElement < dontDisplayThese.length; dontDisplayElement++) {
           dontDisplayThese[dontDisplayElement].style.display = 'none';
       }
+    
   }
   document.getElementById('back_button').addEventListener('click', function(){
     // location.reload(true)
